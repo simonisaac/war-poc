@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.ftse</groupId>
+		<artifactId>eod-cache</artifactId>
+		<version>${revision}</version>
+	</parent>
+
+	<artifactId>eod-cache.adpt.jboss</artifactId>
+	<packaging>war</packaging>
+	<name>EOD Cache JBoss Adapter</name>
+	<description>Adapts JBoss Infinispan cache to the EOD Interface API</description>
+
+	<properties>
+		<version.server.bom>7.1.0.GA</version.server.bom>
+		<version.war.plugin>2.1.1</version.war.plugin>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+
+			<dependency>
+				<groupId>org.jboss.bom</groupId>
+				<artifactId>jboss-eap-javaee7-with-tools</artifactId>
+				<version>${version.server.bom}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+
+		<!-- FTSE Dependencies -->
+		<dependency>
+			<groupId>com.ftse</groupId>
+			<artifactId>eod-cache.core</artifactId>
+			<version>${revision}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ftse</groupId>
+			<artifactId>eod-interface.api</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<!-- JBoss (provided) Dependencies -->
+		<dependency>
+			<groupId>javax.enterprise</groupId>
+			<artifactId>cdi-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.spec.javax.ejb</groupId>
+			<artifactId>jboss-ejb-api_3.2_spec</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<!-- Set the name of the WAR, used as the context root when the app is 
+			deployed. -->
+		<finalName>${project.artifactId}</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<!-- Java EE doesn't require web.xml, Maven needs to catch up! -->
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+					<!-- Define a dependency on the shared API, which will be used by JBoss 
+						Modules at runtime. See the corresponding dependency declared in the POM, 
+						which defines the dependency at compile time. -->
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
